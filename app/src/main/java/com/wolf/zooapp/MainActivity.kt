@@ -8,14 +8,17 @@ import android.view.View
 import android.view.View.inflate
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.ImageView
 import android.widget.TextView
+import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity() {
+
     var listOfAnimals = ArrayList<Animal>()
     var adaptor:AnimalAdaptor? = null
-    var textvName:TextView = findViewById(R.id.tv)
-
-
+    var textvName:TextView = findViewById(R.id.textAnimalName)
+    var textvDesc:TextView = findViewById(R.id.textAnimalDescription)
+    var animalImage:ImageView = findViewById(R.id.imageAnimal)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,16 +30,15 @@ class MainActivity : AppCompatActivity() {
         listOfAnimals.add(Animal("Wolf", "Loves To Live In a Family", R.drawable.wolf))
         listOfAnimals.add(Animal("Zebra", "Have black and white strips", R.drawable.zebra))
 
-        adaptor = AnimalAdaptor(listOfAnimals)
+        adaptor = AnimalAdaptor(this, listOfAnimals)
     }
 
     class AnimalAdaptor:BaseAdapter{
-
         var context:Context? = null
         var layoutInflater:LayoutInflater = LayoutInflater.from(context)
 
         var listOfAnimals = ArrayList<Animal>()
-        constructor(listOfAnimal: ArrayList<Animal>):super(){
+        constructor(conrtext:Context, listOfAnimal: ArrayList<Animal>):super(){
             this.listOfAnimals = listOfAnimals
         }
         override fun getCount(): Int {
@@ -54,8 +56,16 @@ class MainActivity : AppCompatActivity() {
         override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
             var animal = listOfAnimals[p0]
             var myView:View = View.inflate(context, R.layout.animal_view, null)
-            myView.
 
+            val imageV:ImageView = myView.findViewById(R.id.imageAnimal)
+            val textName:TextView = myView.findViewById(R.id.textAnimalName)
+            val textDesc:TextView = myView.findViewById(R.id.textAnimalDescription)
+
+            imageV.setImageResource(Integer.parseInt(listOfAnimals[p0].toString()))
+            textName.text = listOfAnimals[p0].toString()
+            textDesc.text = listOfAnimals[p0].toString()
+
+            return myView
         }
 
     }
