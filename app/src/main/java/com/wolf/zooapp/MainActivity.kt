@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
 
     class AnimalAdaptor:BaseAdapter{
         var context:Context? = null
-        var layoutInflater:LayoutInflater = LayoutInflater.from(context)
 
         var listOfAnimals = ArrayList<Animal>()
         constructor(conrtext:Context, listOfAnimal: ArrayList<Animal>):super(){
@@ -61,9 +60,9 @@ class MainActivity : AppCompatActivity() {
             val textName:TextView = myView.findViewById(R.id.textAnimalName)
             val textDesc:TextView = myView.findViewById(R.id.textAnimalDescription)
 
-            imageV.setImageResource(Integer.parseInt(listOfAnimals[p0].toString()))
-            textName.text = listOfAnimals[p0].toString()
-            textDesc.text = listOfAnimals[p0].toString()
+            imageV.setImageResource(animal.animal_image!!)
+            textName.text = animal.name
+            textDesc.text = animal.animal_description
 
             return myView
         }
