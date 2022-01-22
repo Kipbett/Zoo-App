@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import org.w3c.dom.Text
+import java.nio.file.Files.delete
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,66 +42,82 @@ class MainActivity : AppCompatActivity() {
 
         adaptor = AnimalAdaptor(this, listOfAnimals)
     }
-}
 
-class AnimalAdaptor : BaseAdapter {
-    var context: Context? = null
-
-    var listOfAnimals = ArrayList<Animal>()
-
-    constructor(conrtext: Context, listOfAnimal: ArrayList<Animal>) : super() {
-        this.listOfAnimals = listOfAnimals
+    fun deleteRow(index:Int){
+        listOfAnimals.removeAt(index)
+        adaptor!!.notifyDataSetChanged()
     }
 
-    override fun getCount(): Int {
-        return listOfAnimals.size
+    fun add(index:Int){
+        listOfAnimals.add(listOfAnimals[index])
+        adaptor!!.notifyDataSetChanged()
     }
 
-    override fun getItem(p0: Int): Any {
-        return listOfAnimals[p0]
-    }
 
-    override fun getItemId(p0: Int): Long {
-        return p0.toLong()
-    }
+    inner class AnimalAdaptor : BaseAdapter {
+        var context: Context? = null
 
-    override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-        var animal = listOfAnimals[p0]
-        var myView: View = View.inflate(context, R.layout.animal_view, null)
-        if (animal.isKiller == true) {
-            var myView: View = View.inflate(context, R.layout.animal_killer, null)
-            val imageV: ImageView = myView.findViewById(R.id.imageAnimal)
-            val textName: TextView = myView.findViewById(R.id.textAnimalName)
-            val textDesc: TextView = myView.findViewById(R.id.textAnimalDescription)
-            imageV.setImageResource(animal.animal_image!!)
-            textName.text = animal.name
-            textDesc.text = animal.animal_description
-            imageV.setOnClickListener {
-                val intent: Intent = Intent(context, AnimalInfoActivity::class.java)
-                intent.putExtra("Image", animal.animal_image)
-                intent.putExtra("name", animal.name)
-                intent.putExtra("description", animal.animal_description)
-                //startActivity(context!!, intent, null)
-                context!!.startActivity(intent)
-            }
-        } else {
-            var myView: View = View.inflate(context, R.layout.animal_view, null)
-            val imageV: ImageView = myView.findViewById(R.id.imageAnimal)
-            val textName: TextView = myView.findViewById(R.id.textAnimalName)
-            val textDesc: TextView = myView.findViewById(R.id.textAnimalDescription)
-            imageV.setImageResource(animal.animal_image!!)
-            textName.text = animal.name
-            textDesc.text = animal.animal_description
-            imageV.setOnClickListener {
-                val intent = Intent(context, AnimalInfoActivity::class.java)
-                intent.putExtra("Image", animal.animal_image)
-                intent.putExtra("name", animal.name)
-                intent.putExtra("description", animal.animal_description)
-                //startActivity(context!!, intent, null)
-                context!!.startActivity(intent)
-            }
+        var listOfAnimals = ArrayList<Animal>()
+
+        constructor(conrtext: Context, listOfAnimal: ArrayList<Animal>) : super() {
+            this.listOfAnimals = listOfAnimals
         }
 
-        return myView
+        override fun getCount(): Int {
+            return listOfAnimals.size
+        }
+
+        override fun getItem(p0: Int): Any {
+            return listOfAnimals[p0]
+        }
+
+        override fun getItemId(p0: Int): Long {
+            return p0.toLong()
+        }
+
+        override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
+            var animal = listOfAnimals[p0]
+            var myView: View = View.inflate(context, R.layout.animal_view, null)
+            if (animal.isKiller == true) {
+                var myView: View = View.inflate(context, R.layout.animal_killer, null)
+                val imageV: ImageView = myView.findViewById(R.id.imageAnimal)
+                val textName: TextView = myView.findViewById(R.id.textAnimalName)
+                val textDesc: TextView = myView.findViewById(R.id.textAnimalDescription)
+                imageV.setImageResource(animal.animal_image!!)
+                textName.text = animal.name
+                textDesc.text = animal.animal_description
+                imageV.setOnClickListener {
+                    add(p0)
+                    val intent: Intent = Intent(context, AnimalInfoActivity::class.java)
+                    intent.putExtra("Image", animal.animal_image)
+                    intent.putExtra("name", animal.name)
+                    intent.putExtra("description", animal.animal_description)
+                    //startActivity(context!!, intent, null)
+                    context!!.startActivity(intent)
+                }
+            } else {
+                var myView: View = View.inflate(context, R.layout.animal_view, null)
+                val imageV: ImageView = myView.findViewById(R.id.imageAnimal)
+                val textName: TextView = myView.findViewById(R.id.textAnimalName)
+                val textDesc: TextView = myView.findViewById(R.id.textAnimalDescription)
+                imageV.setImageResource(animal.animal_image!!)
+                textName.text = animal.name
+                textDesc.text = animal.animal_description
+                textName.setOnClickListener {
+                    add(p0)
+                    val intent = Intent(context, AnimalInfoActivity::class.java)
+                    intent.putExtra("Image", animal.animal_image)
+                    intent.putExtra("name", animal.name)
+                    intent.putExtra("description", animal.animal_description)
+                    //startActivity(context!!, intent, null)
+                    context!!.startActivity(intent)
+                }
+                imageV.setOnClickListener {
+                    deleteRow(p0)
+                }
+            }
+
+            return myView
+        }
     }
 }
